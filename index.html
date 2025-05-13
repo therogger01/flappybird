@@ -43,7 +43,7 @@
             left: 50px;
             top: 300px;
             z-index: 10;
-            background-image: url('https://iili.io/2mONmdl.png'); /* Updated bird image */
+            background-image: url('https://iili.io/2mONmdl.png');
             background-size: contain;
             background-repeat: no-repeat;
             transition: transform 0.1s;
@@ -111,7 +111,7 @@
         
         .game-btn {
             margin-top: 15px;
-            padding: 12px 30px;
+            padding: 15px 35px; /* Larger touch target */
             background-color: #FFD700;
             color: #333;
             border: none;
@@ -121,6 +121,7 @@
             font-weight: bold;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             transition: all 0.2s;
+            touch-action: manipulation; /* Mobile optimization */
         }
     </style>
 </head>
@@ -343,8 +344,27 @@
             }
         }
         
-        highScoreElement.textContent = `High Score: ${highScore}`;
+        // Mobile-optimized button handlers
+        function setupButtons() {
+            // Start button
+            startBtn.addEventListener('click', init);
+            startBtn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                init();
+            }, { passive: false });
+            
+            // Restart button
+            restartBtn.addEventListener('click', init);
+            restartBtn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                init();
+            }, { passive: false });
+        }
         
+        // Initialize button handlers
+        setupButtons();
+        
+        // Game controls
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space' || e.key === ' ' || e.key === 'ArrowUp') {
                 e.preventDefault();
@@ -353,13 +373,13 @@
         });
         
         gameContainer.addEventListener('click', jump);
-        gameContainer.addEventListener('touchstart', (e) => {
+        gameContainer.addEventListener('touchend', function(e) {
             e.preventDefault();
             jump();
         }, { passive: false });
         
-        startBtn.addEventListener('click', init);
-        restartBtn.addEventListener('click', init);
+        // Initialize high score display
+        highScoreElement.textContent = `High Score: ${highScore}`;
     </script>
 </body>
 </html>
